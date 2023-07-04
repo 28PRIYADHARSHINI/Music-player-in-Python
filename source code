@@ -1,0 +1,65 @@
+import pygame
+import ipywidgets as widgets
+from IPython.display import display
+
+# Create the buttons
+play_button = widgets.Button(description='Play')
+pause_button = widgets.Button(description='Pause')
+stop_button = widgets.Button(description='Stop')
+previous_button = widgets.Button(description='Previous')
+next_button = widgets.Button(description='Next')
+
+# Create a playlist of song file paths
+playlist = [
+    r'C:\Users\Admin\Downloads\En-Rojaa-Neeye-MassTamilan.dev.mp3',
+    r'C:\Users\Admin\Downloads\Urugi Urugi Joe 128 Kbps.mp3',
+    
+    # Add more song paths as needed
+]
+
+# Index of the current song in the playlist
+current_song_index = 0
+
+# Function to load and play music
+def load_and_play_music(file_path):
+    pygame.mixer.init()
+    pygame.mixer.music.load(file_path)
+    pygame.mixer.music.play()
+
+# Function to play the next song
+def play_next_song(_):
+    global current_song_index
+    current_song_index = (current_song_index + 1) % len(playlist)  # Move to the next song
+    next_song_file_path = playlist[current_song_index]
+    load_and_play_music(next_song_file_path)
+
+# Function to play the previous song
+def play_previous_song(_):
+    global current_song_index
+    current_song_index = (current_song_index - 1) % len(playlist)  # Move to the previous song
+    previous_song_file_path = playlist[current_song_index]
+    load_and_play_music(previous_song_file_path)
+
+# Event handlers for the buttons
+def play_music(_):
+    pygame.mixer.music.unpause()
+
+def pause_music(_):
+    pygame.mixer.music.pause()
+
+def stop_music(_):
+    pygame.mixer.music.stop()
+
+# Assign event handlers to the buttons
+play_button.on_click(play_music)
+pause_button.on_click(pause_music)
+stop_button.on_click(stop_music)
+previous_button.on_click(play_previous_song)
+next_button.on_click(play_next_song)
+
+# Display the buttons
+display(widgets.HBox([previous_button, play_button, pause_button, stop_button, next_button]))
+
+# Load and play the initial song
+initial_song_file_path = playlist[current_song_index]
+load_and_play_music(initial_song_file_path)
